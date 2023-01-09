@@ -43,7 +43,7 @@ class ServicesController < ApplicationController
     def set_isp
         @isp=Isp.find_by(id: params[:isp_id].to_i)
         if @isp.blank?
-            render status:404, json:{message: "Isp #{params[:isp_id]} doesn't exist"}
+            render status:404, json:{message: "The Isp #{params[:isp_id]} doesn't exist"}
             false
         end
     end
@@ -51,7 +51,7 @@ class ServicesController < ApplicationController
     def set_service
         @service=Service.find_by(id: params[:id])
         if @service.blank?
-            render status:404, json:{message: "Service #{params[:id]} doesn't exist"}
+            render status:404, json:{message: "The Service #{params[:id]} doesn't exist"}
             false
         end
         if @service.isp_id != @isp.id
@@ -62,7 +62,7 @@ class ServicesController < ApplicationController
 
     def check_token
         if request.headers["Authorization"] != "Bearer #{@isp.token}"
-            render status:400, json:{message: "Token isn't valid"}
+            render status:400, json:{message: "The Token isn't valid"}
             false
         end
     end

@@ -1,6 +1,6 @@
 class IspsController < ApplicationController
     before_action :set_isp, only:[:show,:update,:destroy]
-    before_action :check_token, except:[:index,:show,:create]
+    before_action :check_token, only:[:update,:destroy]
 
     def index
         @isps=Isp.all.select("id,name,created_at,updated_at")
@@ -8,7 +8,6 @@ class IspsController < ApplicationController
     end
 
     def show
-        @isp
         render status:200, json:{isp: {id:@isp.id, name: @isp.name,created_at: @isp.created_at, updated_at: @isp.updated_at}}
     end
 
@@ -42,19 +41,49 @@ class IspsController < ApplicationController
         end
     end
 
+    def login
+        @isp=Isp.find_by(name: params[:isp][:name])
+        if @isp.present?
+            if @isp.authenticate(params[:isp][:password])
+                render status:200, json:{isp: {id: @isp.id, name: @isp.name, token: @isp.token}}
+            else
+                render status:404, json:{message: "The Password is incorrect"}
+            end
+        else
+            render status:400, json:{message: "The Isp #{params[:isp][:name]} doesn't exist"}
+        end
+    end
+
+    def change_password
+        if @isp.authenticate(params[:isp][:current_password])
+            if params[:isp][:password]==params[:isp][:confirm_password]
+                @isp.assign_attributes(params.require(:isp).permit(:password))
+                if @isp.save
+                    render status:200, json:{isp: {id:@isp.id, name: @isp.name}}
+                else
+                    render status:500, json:{message:@isp.errors.full_messages}
+                end
+            else
+                render status:404, json:{message: "Password and Confirm Password don't match"}
+            end
+        else
+            render status:400, json:{message: "Current Password is incorrect"}
+        end
+    end
+
     private
 
     def set_isp
         @isp=Isp.find_by(id: params[:id])
         if @isp.blank?
-            render status:404, json:{message: "Isp #{params[:id]} doesn't exist"}
+            render status:404, json:{message: "The Isp #{params[:id]} doesn't exist"}
             false
         end
     end
 
     def check_token
         if request.headers["Authorization"] != "Bearer #{@isp.token}"
-            render status:400, json:{message: "Token isn't valid"}
+            render status:400, json:{message: "The Token isn't valid"}
             false
         end
     end
