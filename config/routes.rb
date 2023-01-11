@@ -6,13 +6,20 @@ Rails.application.routes.draw do
 
   get 'isps/login', to: 'isps#login'
 
-  put 'isps/change_password', to: 'isps#change_password'
-
-  resources :isps, except:[:new,:edit] do
-    resources :services, except:[:index,:new,:edit]
-  end
+  put 'isps/:id/change_password', to: 'isps#change_password'
 
   get 'services', to: 'services#index'
+
+  get 'isps/:id/list_request',to: 'isps#list_request'
+
+  get 'isps/:id/reject_request',to: 'isps#list_rejected'
+
+  put 'isps/:isp_id/services/:id/user_service/:user_service_id/check_request', to: 'services#check_request'
+
+  resources :isps, except:[:new,:edit] do
+    post 'services/:id/request', to: 'services#request_service'
+    resources :services, except:[:index,:new,:edit]
+  end
 
   get 'users/login', to: 'users#login'
 

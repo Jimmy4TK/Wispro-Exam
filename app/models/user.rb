@@ -2,8 +2,8 @@ class User < ApplicationRecord
     has_secure_password
 
     #Relations
-    has_many :user_service, dependent: :destroy
-    has_many :service, through: :user_service
+    has_one :user_service, dependent: :destroy
+    has_one :service, through: :user_service
 
     #Validates
     validates :name, presence: true

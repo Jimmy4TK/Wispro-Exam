@@ -1,6 +1,7 @@
 class IspsController < ApplicationController
-    before_action :set_isp, only:[:show,:update,:destroy]
-    before_action :check_token, only:[:update,:destroy]
+    
+    before_action :set_isp, except:[:index,:create,:login]
+    before_action :check_token, except:[:index,:show,:create,:login]
 
     def index
         @isps=Isp.all.select("id,name,created_at,updated_at")
@@ -47,7 +48,7 @@ class IspsController < ApplicationController
             if @isp.authenticate(params[:isp][:password])
                 render status:200, json:{isp: {id: @isp.id, name: @isp.name, token: @isp.token}}
             else
-                render status:404, json:{message: "The Password is incorrect"}
+                render status:400, json:{message: "The Password is incorrect"}
             end
         else
             render status:400, json:{message: "The Isp #{params[:isp][:name]} doesn't exist"}
@@ -64,10 +65,28 @@ class IspsController < ApplicationController
                     render status:500, json:{message:@isp.errors.full_messages}
                 end
             else
-                render status:404, json:{message: "Password and Confirm Password don't match"}
+                render status:400, json:{message: "Password and Confirm Password don't match"}
             end
         else
             render status:400, json:{message: "Current Password is incorrect"}
+        end
+    end
+
+    def list_request
+        @user_services=@isp.services.map(&:pending_request).reject { |c| c.empty? }
+        if @user_services.present?
+            render status:200,json:{user_services: @user_services}
+        else
+            render status:200,json:{message: "You doesn't have pending request"}
+        end
+    end
+
+    def list_rejected
+        @user_services=@isp.services.map(&:reject_request).reject { |c| c.empty? }
+        if @user_services.present?
+            render status:200,json:{user_services: @user_services}
+        else
+            render status:200,json:{message: "You doesn't have reject request in the last month"}
         end
     end
 
@@ -76,7 +95,7 @@ class IspsController < ApplicationController
     def set_isp
         @isp=Isp.find_by(id: params[:id])
         if @isp.blank?
-            render status:404, json:{message: "The Isp #{params[:id]} doesn't exist"}
+            render status:400, json:{message: "The Isp #{params[:id]} doesn't exist"}
             false
         end
     end

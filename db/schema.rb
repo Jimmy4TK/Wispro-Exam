@@ -33,6 +33,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_03_162715) do
   end
 
   create_table "user_services", force: :cascade do |t|
+    t.integer "status", default: 0
     t.bigint "user_id"
     t.bigint "service_id"
     t.datetime "created_at", null: false

@@ -51,7 +51,7 @@ class UsersController < ApplicationController
                     render status:500, json:{message:@user.errors.full_messages}
                 end
             else
-                render status:404, json:{message: "Password and Confirm Password don't match"}
+                render status:400, json:{message: "Password and Confirm Password don't match"}
             end
         else
             render status:400, json:{message: "Current Password is incorrect"}
@@ -64,7 +64,7 @@ class UsersController < ApplicationController
     def set_user
         @user=User.find_by(id: params[:id])
         if @user.blank?
-            render status:404, json:{message: "The User doesn't exist"}
+            render status:400, json:{message: "The User doesn't exist"}
             false
         end
     end
