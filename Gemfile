@@ -15,6 +15,9 @@ gem "pg", "~> 1.4.5"
 # Use bcrypt to encrypt passwords in database
 gem "bcrypt", "~> 3.1" , ">= 3.1.18"
 
+# Use rack cors to http request in database
+gem "rack-cors"
+
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", "~> 5.0"
 

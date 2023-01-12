@@ -3,14 +3,14 @@ class UsersController < ApplicationController
     before_action :check_token, only:[:show,:update,:change_password]
 
     def show
-        render status:200, json:{user: {id:@user.id, name: @user.name,last_name: @user.last_name, mail: @user.mail}}
+        render status:200, json:{id:@user.id, name: @user.name,last_name: @user.last_name, mail: @user.mail}
     end
 
     def create
-        if params[:user][:password] == params[:user][:confirm_password]
+        if params[:user][:password] == params[:confirm_password]
             @user=User.new(params.require(:user).permit(:name,:last_name,:mail,:password))
             if @user.save
-                render status:200, json:{user: {id:@user.id, name: @user.name,last_name: @user.last_name, mail: @user.mail}}
+                render status:200, json:{id:@user.id, name: @user.name,last_name: @user.last_name, mail: @user.mail}
             else
                 render status:500, json:{message: @user.errors.full_messages}
             end            
@@ -22,7 +22,7 @@ class UsersController < ApplicationController
     def update
         @user.assign_attributes(params.require(:user).permit(:name,:last_name,:mail))
         if @user.save
-            render status:200, json:{user: {id:@user.id, name: @user.name,last_name: @user.last_name, mail: @user.mail}}
+            render status:200, json:{id:@user.id, name: @user.name,last_name: @user.last_name, mail: @user.mail}
         else
             render status:500, json:{message: @user.errors.full_messages}
         end
@@ -32,7 +32,7 @@ class UsersController < ApplicationController
         @user=User.find_by(mail: params[:user][:mail])
         if @user.present?
             if @user.authenticate(params[:user][:password])
-                render status:200, json:{user: {id: @user.id, name: @user.name, last_name: @user.last_name, mail: @user.mail, token: @user.token}}
+                render status:200, json:{id: @user.id, name: @user.name, last_name: @user.last_name, mail: @user.mail, token: @user.token}
             else
                 render status:404, json:{message: "The Password is incorrect"}
             end
@@ -46,7 +46,7 @@ class UsersController < ApplicationController
             if params[:user][:password]==params[:user][:confirm_password]
                 @user.assign_attributes(params.require(:user).permit(:password))
                 if @user.save
-                    render status:200, json:{user: {id:@user.id, name: @user.name,last_name: @user.last_name, mail: @user.mail}}
+                    render status:200, json:{id:@user.id, name: @user.name,last_name: @user.last_name, mail: @user.mail}
                 else
                     render status:500, json:{message:@user.errors.full_messages}
                 end

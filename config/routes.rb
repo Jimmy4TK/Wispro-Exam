@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "articles#index"
 
-  get 'isps/login', to: 'isps#login'
+  post 'isps/login', to: 'isps#login'
 
   put 'isps/:id/change_password', to: 'isps#change_password'
 
@@ -21,7 +21,7 @@ Rails.application.routes.draw do
     resources :services, except:[:index,:new,:edit]
   end
 
-  get 'users/login', to: 'users#login'
+  post 'users/login', to: 'users#login'
 
   put 'users/:id/change_password', to: 'users#change_password'
 

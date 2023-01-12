@@ -9,14 +9,14 @@ class IspsController < ApplicationController
     end
 
     def show
-        render status:200, json:{isp: {id:@isp.id, name: @isp.name,created_at: @isp.created_at, updated_at: @isp.updated_at}}
+        render status:200, json:{id:@isp.id, name: @isp.name,created_at: @isp.created_at, updated_at: @isp.updated_at}
     end
 
     def create
-        if params[:isp][:password] == params[:isp][:confirm_password]
+        if params[:isp][:password] == params[:confirm_password]
             @isp=Isp.new(params.require(:isp).permit(:name,:password))
             if @isp.save
-                render status:200, json:{isp: {id:@isp.id, name: @isp.name,created_at: @isp.created_at, updated_at: @isp.updated_at}}
+                render status:200, json:{id:@isp.id, name: @isp.name,created_at: @isp.created_at, updated_at: @isp.updated_at}
             else
                 render status:500, json:{message: @isp.errors.full_messages}
             end
@@ -28,7 +28,7 @@ class IspsController < ApplicationController
     def update
         @isp.assign_attributes(params.require(:isp).permit(:name))
         if @isp.save
-            render status:200, json:{isp: {id:@isp.id, name: @isp.name,created_at: @isp.created_at, updated_at: @isp.updated_at}}
+            render status:200, json:{id:@isp.id, name: @isp.name,created_at: @isp.created_at, updated_at: @isp.updated_at}
         else
             render status:500, json:{message: @isp.errors.full_messages}
         end
@@ -46,7 +46,7 @@ class IspsController < ApplicationController
         @isp=Isp.find_by(name: params[:isp][:name])
         if @isp.present?
             if @isp.authenticate(params[:isp][:password])
-                render status:200, json:{isp: {id: @isp.id, name: @isp.name, token: @isp.token}}
+                render status:200, json:{id: @isp.id, name: @isp.name, token: @isp.token}
             else
                 render status:400, json:{message: "The Password is incorrect"}
             end
@@ -60,7 +60,7 @@ class IspsController < ApplicationController
             if params[:isp][:password]==params[:isp][:confirm_password]
                 @isp.assign_attributes(params.require(:isp).permit(:password))
                 if @isp.save
-                    render status:200, json:{isp: {id:@isp.id, name: @isp.name}}
+                    render status:200, json:{id:@isp.id, name: @isp.name}
                 else
                     render status:500, json:{message:@isp.errors.full_messages}
                 end
