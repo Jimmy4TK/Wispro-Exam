@@ -2,6 +2,7 @@ class UserServicesController < ApplicationController
     before_action :set_isp
     before_action :set_service, except:[:list_rejected,:list_request]
     before_action :set_user_service, only:[:check_request]
+    before_action :check_token, except:[:create]
 
     def create
         @user=User.find_by(id: params[:user][:id])
@@ -81,6 +82,13 @@ class UserServicesController < ApplicationController
                 render status:400, json:{message: "The User Service doesn't correspond to Service #{@service.id}"}
                 false
             end
+        end
+    end
+
+    def check_token
+        if request.headers["Authorization"] != "Bearer #{@isp.token}"
+            render status:400, json:{message: "The Token isn't valid"}
+            false
         end
     end
 end

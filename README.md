@@ -74,14 +74,6 @@ Rails db:seed
 
 #### Este metodo requiere un objeto isp que posea current_password, password y confirm_password, el token en el header authorization y en el url el id del isp a cambiar la contraseña; el metodo utiliza los metodos set_isp y check_token como CallBack (antes de la ejecutarse), el metodo verifica que la contraseña sea la correspondiente al isp, en el caso de ser correcta verifica que la contraseña y confirmar contraseña sean igual si es asi se le asigna contraseña y en el caso de guardarlo devuelve el objeto y en caso contrario devuelve error
 
-### list_request
-
-#### Este metodo requiere el token en el header authorization y en el url el id del isp a ver la lista de peticiones de serivicos que estan pendientes; el metodo llama a la funcion de Service pending_request por cada servicio que posee, elimina los vacios y los asigna a user_service, si este tiene almenos 1 atributo lo/s devuelve y en caso contrario devuelve el mensaje que no hay peticiones pendientes
-
-### list_rejected
-
-#### Este metodo requiere el token en el header authorization y en el url el id del isp a ver la lista de peticiones de serivicos que estan rechazados el ultimo mes; el metodo llama a la funcion de Service reject_request por cada servicio que posee, elimina los vacios y los asigna a user_service, si este tiene almenos 1 atributo lo/s devuelve y en caso contrario devuelve el mensaje que no hay peticiones rechazadas el ultimo mes
-
 ## Controlador Servicio
 
 ### set_isp
@@ -96,14 +88,6 @@ Rails db:seed
 
 #### Es un metodo utilizado como CallBack para buscar el servicio correspondiente con el id enviado en el url, en el caso de no encontrar dicho servicio devuelve un mensaje de error
 
-### set_user_service
-
-#### Es un metodo utilizado como CallBack para buscar el user_service correspondiente con el id enviado en el url, en el caso de no encontrar dicho user_service devuelve un mensaje de error
-
-### change_service?
-
-#### El metodo revisa si el usuario posee un user_service, en ese caso asigna el userservice, cambia el servicio por el enviado en la url, y el status a pendiente, si se puede guardar devuelve verdadero y en caso contrario un error o falso
-
 ### index
 
 #### Devuelve todos los servicios con orden del isp_id
@@ -112,14 +96,40 @@ Rails db:seed
 
 #### El metodo requiere un objeto service con los atributos name,price y description y el id del isp en el url, el metodo utiliza los metodos set_isp y check_token como CallBack (antes de la ejecutarse); el metodo instancia con el objeto enviado como Servicio al perteneciendo al isp asignado anteriormente, si se guarda devuelve el servicio y en caso contrario devuelve error
 
-### request_service
+## Controlador Usuario
+
+### Metodos create, update, login y change password similares al del isp
+
+## Controlador User Service
+
+### set_isp
+
+#### Es un metodo utilizado como CallBack para buscar el isp correspondiente con el id enviado en el url, en el caso de no encontrar dicho isp devuelve un mensaje de error
+
+### check_token
+
+#### Es un metodo utilizado como CallBack para corroborar que el token enviado en el header es el correspondiente al isp que se ha ingresado anteriormente, en el caso de que el token no corresponda devuelve un mensaje de error
+
+### create
 
 #### El metodo requiere un objeto user con el id, el id del isp y service en el url y el token del usuario en el header, el metodo utiliza los metodos set_isp y set_service como CallBack (antes de la ejecutarse); el metodo busca el usuario con el id, si este esta presente checkea que el token enviado en header con el del usuario, si estos coinciden llama a change_service, en el caso que no tenga un service previamente instancia un user_service que pertenece al service y al usuario enviados anteriormente, si se guarda devuelve el user_service y en caso contrario devuelve error
 
 ### check_request
 
-#### El metodo requiere un objeto userservice con un status; el id del isp, service y el user_service en el url y el token del isp en el header, el metodo utiliza los metodos set_isp, set_service, set_user_service y check_token como CallBack (antes de la ejecutarse); el metodo asigna el estado enviado al userservice, si este se guarda devuelve el servicio y en caso contrario devuelve error
+#### El metodo requiere un objeto user_service con un status; el id del isp, service y el user_service en el url y el token del isp en el header, el metodo utiliza los metodos set_isp, set_service, set_user_service y check_token como CallBack (antes de la ejecutarse); el metodo asigna el estado enviado al user_service, si este se guarda devuelve el servicio y en caso contrario devuelve error
 
-## Controlador Usuario
+### set_service
 
-### Metodos create, update, login y change password similares al del isp
+#### Es un metodo utilizado como CallBack para buscar el servicio correspondiente con el id enviado en el url, en el caso de no encontrar dicho servicio devuelve un mensaje de error
+
+### set_user_service
+
+#### Es un metodo utilizado como CallBack para buscar el user_service correspondiente con el id enviado en el url, en el caso de no encontrar dicho user_service devuelve un mensaje de error
+
+### list_request
+
+#### Este metodo requiere el token en el header authorization y en el url el id del isp a ver la lista de peticiones de serivicos que estan pendientes; el metodo llama a la funcion de Service pending_request por cada servicio que posee, elimina los vacios y los asigna a user_service, si este tiene almenos 1 atributo lo/s devuelve y en caso contrario devuelve el mensaje que no hay peticiones pendientes
+
+### list_rejected
+
+#### Este metodo requiere el token en el header authorization y en el url el id del isp a ver la lista de peticiones de serivicos que estan rechazados el ultimo mes; el metodo llama a la funcion de Service reject_request por cada servicio que posee, elimina los vacios y los asigna a user_service, si este tiene almenos 1 atributo lo/s devuelve y en caso contrario devuelve el mensaje que no hay peticiones rechazadas el ultimo mes
