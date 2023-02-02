@@ -10,14 +10,15 @@ Rails.application.routes.draw do
 
   get 'services', to: 'services#index'
 
-  get 'isps/:id/list_request',to: 'isps#list_request'
+  get 'isps/:isp_id/user_services/list_request',to: 'user_services#list_request'
 
-  get 'isps/:id/reject_request',to: 'isps#list_rejected'
+  get 'isps/:isp_id/user_services/reject_request',to: 'user_services#list_rejected'
 
-  put 'isps/:isp_id/services/:id/user_service/:user_service_id/check_request', to: 'services#check_request'
+  put 'isps/:isp_id/services/:service_id/user_services/:id/check_request', to: 'user_services#check_request'
+
+  post 'isps/:isp_id/services/:service_id/user_services', to: 'user_services#create'
 
   resources :isps, except:[:new,:edit] do
-    post 'services/:id/request', to: 'services#request_service'
     resources :services, except:[:index,:new,:edit]
   end
 
