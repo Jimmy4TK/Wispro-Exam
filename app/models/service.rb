@@ -12,12 +12,8 @@ class Service < ApplicationRecord
     #CallBacks
 
     #Methods
-    def pending_request
-        self.user_service.pendiente.order(:created_at)
-    end
 
-    def reject_request
-        rejects=self.user_service.rechazado.where('created_at > ?', Time.now - 1.month)
-    end
+    #Scopes
+    scope :ordered_by_isp, -> { order(isp_id: :asc) }
     
 end

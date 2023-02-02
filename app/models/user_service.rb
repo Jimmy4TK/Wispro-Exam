@@ -9,6 +9,8 @@ class UserService < ApplicationRecord
 
     #CallBacks
 
-    #Methods
+    #Methods        
     
+    #Scope
+    scope :last_month, -> { where('updated_at > ?', Time.now - 1.month) }
 end
